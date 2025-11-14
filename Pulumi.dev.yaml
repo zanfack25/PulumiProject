@@ -1,0 +1,6 @@
+config:
+  PulumiProject:errorDocument: error.html
+  PulumiProject:indexDocument: index.ts
+  PulumiProject:path: ./www
+  aws:region: ca-central-1
+  pulumi:template: https://github.com/pulumi/templates/tree/head/static-website-aws-typescript
