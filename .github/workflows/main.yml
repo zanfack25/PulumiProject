@@ -26,7 +26,7 @@ jobs:
       - uses: pulumi/actions@v5
         with:
           command: destroy
-          stack-name: mishu22bd/myworkshop/dev
+          stack-name: zanfack25/PulumiProject/dev 
           work-dir: ./ppinfra
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
