@@ -43,19 +43,19 @@ const bucketFolder = new synced_folder.S3BucketFolder("bucket-folder", {
 // --------------------
 
 // Create a VPC and subnets (for demo purposes)
-const vpc = new aws.ec2.Vpc("vpc", { cidrBlock: "10.0.0.0/16" });
+const vpc = new aws.ec2.Vpc("vpc", { cidrBlock: "10.40.0.0/24"});
 
 
 // Create subnets in two AZs
 const subnet1 = new aws.ec2.Subnet("subnet1", {
     vpcId: vpc.id,
-    cidrBlock: "10.0.1.0/24",
+    cidrBlock: "10.40.0.0/25",
     availabilityZone: "ca-central-1a", 
 });
 
 const subnet2 = new aws.ec2.Subnet("subnet2", {
     vpcId: vpc.id,
-    cidrBlock: "10.0.2.0/24",
+    cidrBlock: "10.40.0.128/25",
     availabilityZone: "ca-central-1b",
 });
 
