@@ -47,7 +47,7 @@ const vpc = new aws.ec2.Vpc("vpc", { cidrBlock: "10.0.0.0/16" });
 const subnet = new aws.ec2.Subnet("subnet", {
     vpcId: vpc.id,
     cidrBlock: "10.0.1.0/24",
-    availabilityZone: "us-east-1a",
+    availabilityZone: "ca-central-1a",
 });
 
 // Security group for ALB
