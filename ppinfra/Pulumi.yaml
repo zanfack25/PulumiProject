@@ -1,4 +1,4 @@
-name: myworkshop
+name: PulumiProject
 description: A TypeScript program to deploy a static website on AWS
 runtime:
   name: nodejs
