@@ -22,11 +22,12 @@ jobs:
       - name: Install Dependencies
         working-directory: ./ppinfra
         run: npm install
-
-      - uses: pulumi/actions@v5
+      
+      - name: Pulumi Up 
+        uses: pulumi/actions@v5
         with:
-          command: destroy
-          stack-name: zanfack25/PulumiProject/dev 
+          command: up
+          stack-name: zanfack25/PulumiProject/dev    # must match Pulumi.yaml
           work-dir: ./ppinfra
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
@@ -34,4 +35,9 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
-
+      
+      - name: Show Outputs (URLs for screenshots)
+        run: pulumi stack output
+        working-directory: ./ppinfra
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
