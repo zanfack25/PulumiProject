@@ -73,7 +73,7 @@ const alb = new aws.lb.LoadBalancer("alb", {
     internal: false,
     loadBalancerType: "application",
     securityGroups: [albSg.id],
-    subnets: [subnet1.id, subnet2.id],   // ✅ two subnets in different AZs
+    subnets: [subnet1.id, subnet2.id],   // two subnets in different AZs
 });
 
 
@@ -107,7 +107,7 @@ const ami = aws.ec2.getAmi({
 const server = new aws.ec2.Instance("server", {
     instanceType: "t2.micro",
     vpcSecurityGroupIds: [albSg.id],
-    subnetId: subnet.id,
+    subnetId: subnet1.id,
     ami: ami.then(a => a.id),
     userData: `#!/bin/bash
 echo "Hello from Pulumi ALB" > index.html
