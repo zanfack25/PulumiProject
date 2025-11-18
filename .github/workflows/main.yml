@@ -27,7 +27,7 @@ jobs:
         uses: pulumi/actions@v5
         with:
           command: up
-          stack-name: zanfack25/PulumiProject/dev    # must match Pulumi.yaml
+          stack-name: zanfack25/PulumiProject/dev    # must match Pulumi.yaml triger the build
           work-dir: ./ppinfra
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
