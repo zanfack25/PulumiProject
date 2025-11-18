@@ -23,16 +23,22 @@ jobs:
         working-directory: ./ppinfra
         run: npm install
       
-      # Step 1: Destroy all resources
-      - name: Pulumi Destroy
+      - name: Pulumi Up 
         uses: pulumi/actions@v5
         with:
-          command: destroy
-          stack-name: zanfack25/PulumiProject/dev
-          work-dir: .
+          command: up
+          stack-name: zanfack25/PulumiProject/dev    # must match Pulumi.yaml triger the build
+          work-dir: ./ppinfra
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          # If you do not have Pulumi ESC configured then uncomment:
+          AWS_REGION: ca-central-1
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ca-central-1
-   
+          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+      
+      - name: Show Outputs (URLs for screenshots)
+        run: pulumi stack output
+        working-directory: ./ppinfra
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
