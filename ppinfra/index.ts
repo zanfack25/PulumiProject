@@ -44,11 +44,21 @@ const bucketFolder = new synced_folder.S3BucketFolder("bucket-folder", {
 
 // Create a VPC and subnets (for demo purposes)
 const vpc = new aws.ec2.Vpc("vpc", { cidrBlock: "10.0.0.0/16" });
-const subnet = new aws.ec2.Subnet("subnet", {
+
+
+// Create subnets in two AZs
+const subnet1 = new aws.ec2.Subnet("subnet1", {
     vpcId: vpc.id,
     cidrBlock: "10.0.1.0/24",
-    availabilityZone: "ca-central-1a",
+    availabilityZone: "ca-central-1a", 
 });
+
+const subnet2 = new aws.ec2.Subnet("subnet2", {
+    vpcId: vpc.id,
+    cidrBlock: "10.0.2.0/24",
+    availabilityZone: "ca-central-1b",
+});
+
 
 // Security group for ALB
 const albSg = new aws.ec2.SecurityGroup("alb-sg", {
@@ -58,13 +68,14 @@ const albSg = new aws.ec2.SecurityGroup("alb-sg", {
     egress: [{ protocol: "-1", fromPort: 0, toPort: 0, cidrBlocks: ["0.0.0.0/0"] }],
 });
 
-// Create the ALB
+// Create the ALB across both subnets
 const alb = new aws.lb.LoadBalancer("alb", {
     internal: false,
     loadBalancerType: "application",
     securityGroups: [albSg.id],
-    subnets: [subnet.id],
+    subnets: [subnet1.id, subnet2.id],   // ✅ two subnets in different AZs
 });
+
 
 // Target group
 const targetGroup = new aws.lb.TargetGroup("tg", {
