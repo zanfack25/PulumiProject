@@ -60,6 +60,33 @@ const subnet2 = new aws.ec2.Subnet("subnet2", {
 });
 
 
+// Create Internet Gateway
+const igw = new aws.ec2.InternetGateway("igw", {
+    vpcId: vpc.id,
+});
+
+// Create a route table
+const routeTable = new aws.ec2.RouteTable("routeTable", {
+    vpcId: vpc.id,
+    routes: [{
+        cidrBlock: "0.0.0.0/0",
+        gatewayId: igw.id,
+    }],
+});
+
+// Associate route table with subnets
+const rtAssoc1 = new aws.ec2.RouteTableAssociation("rtAssoc1", {
+    subnetId: subnet1.id,
+    routeTableId: routeTable.id,
+});
+
+const rtAssoc2 = new aws.ec2.RouteTableAssociation("rtAssoc2", {
+    subnetId: subnet2.id,
+    routeTableId: routeTable.id,
+});
+
+
+
 // Security group for ALB
 const albSg = new aws.ec2.SecurityGroup("alb-sg", {
     vpcId: vpc.id,
