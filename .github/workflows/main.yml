@@ -1,44 +1,49 @@
-name: main
+name: Pulumi CI
 
 on:
+  workflow_dispatch:   # allows manual trigger
   push:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
-  pulumi-up:
-    name: pulumi-up
+  pulumi:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Set up Node.js 18
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: '18'
 
-      - name: Install Dependencies
-        working-directory: ./ppinfra
+      - name: Install dependencies
         run: npm install
-      
-      - name: Pulumi Up 
+
+      # Step 1: Destroy all resources
+      - name: Pulumi Destroy
+        uses: pulumi/actions@v5
+        with:
+          command: destroy
+          stack-name: zanfack25/PulumiProject/dev
+          work-dir: .
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ca-central-1
+
+      # Step 2: Recreate resources
+      - name: Pulumi Up
         uses: pulumi/actions@v5
         with:
           command: up
-          stack-name: zanfack25/PulumiProject/dev    # must match Pulumi.yaml triger the build
-          work-dir: ./ppinfra
+          stack-name: zanfack25/PulumiProject/dev
+          work-dir: .
+          args: --yes   # auto-approve without prompt
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-          # If you do not have Pulumi ESC configured then uncomment:
-          AWS_REGION: ca-central-1
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
-      
-      - name: Show Outputs (URLs for screenshots)
-        run: pulumi stack output
-        working-directory: ./ppinfra
-        env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          AWS_REGION: ca-central-1
